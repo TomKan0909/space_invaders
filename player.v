@@ -9,7 +9,8 @@ module player (
     output reg [2:0] colour, // color sent to vga 
 );
     ///***** Player is a 4 by 4 Square that can only move in x direction******///
-
+    reg [7:0] x_pos_reg;
+    reg [6:0] y_pos_reg;
 
     
     reg [3:0] counter_out;
@@ -18,42 +19,42 @@ module player (
     begin
         if (reset_n)
         begin 
-            x_pos <= 8'd78; // roughly in the middle since 160 X 120
-            y_pos <= 7'd100; // roughly near the bottom of screen
+            x_pos_reg <= 8'd78; // roughly in the middle since 160 X 120
+            y_pos_reg <= 7'd100; // roughly near the bottom of screen
         end
         else if (!got_hit) // still alive 
         begin
-            y_pos <= y_pos; // fixed since only move in x direction
+            y_pos_reg <= y_pos_reg; // fixed since only move in x direction
             colour <= 3'b111; // white ?
             if (left) // move left
             begin
                 if (!x_pos)begin
-                    x_pos <= x_pos;
+                    x_pos_reg <= x_pos_reg;
                 end
                 else begin
-                    x_pos <= x_pos - 1'b1;
+                    x_pos_reg <= x_pos_reg - 1'b1;
                 end     
             end
             
             else if (right) // move right
             begin
                 if(x_pos == 8'd155)begin
-                    x_pos <= x_pos;
+                    x_pos_reg <= x_pos_reg;
                 end
                 else begin
-                    x_pos <= x_pos + 1'b1;
+                    x_pos_reg <= x_pos_reg + 1'b1;
                 end    
             end
             else // not moving
             begin
-               x_pos <= x_pos; 
+               x_pos_reg <= x_pos_reg; 
             end
 
         end
         else if (got_hit) // dead 
         begin
-            x_pos <= x_pos;
-            y_pos <= y_pos;
+            x_pos_reg <= x_pos_reg;
+            y_pos_reg <= y_pos_reg;
             colour <= 3'b000; //black
         end
 
@@ -64,8 +65,8 @@ module player (
     /// Draw player 
     always @(counter_out)
     begin
-        y_pos <= y_pos + counter_out[3:2];
-        x_pos <= x_pos + counter_out[1:0];
+        y_pos <= y_pos_reg + counter_out[3:2];
+        x_pos <= x_pos_reg + counter_out[1:0];
     end
 
 
