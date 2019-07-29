@@ -6,7 +6,7 @@ module player (
     input got_hit, // signals whether player has been shot by alien
     output reg [7:0] x_pos , // current x_position - sent to vga
     output reg [6:0] y_pos , // current y_position - sent to vga 
-    output reg [2:0] colour, // color sent to vga 
+    output reg [2:0] colour // color sent to vga 
 );
     ///***** Player is a 4 by 4 Square that can only move in x direction******///
     reg [7:0] x_pos_reg;

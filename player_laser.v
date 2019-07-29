@@ -2,12 +2,12 @@ module player_laser(
     input clk,
     input reset_n,
     input shoot, // signal to shoot the laser
-    input [7:0] x_pos; // x_position of player, need to add 1 to center it
-    input [6:0] y_pos; // y_position of player
-    input hit; // signal to determine if laser hits alien
-    output reg [7:0] x_laser; // current x - position of laser
-    output reg [6:0] y_laser; // current y - position of laser 
-    output reg [2:0] colour; 
+    input [7:0] x_pos, // x_position of player, need to add 1 to center it
+    input [6:0] y_pos, // y_position of player
+    input hit, // signal to determine if laser hits alien
+    output reg [7:0] x_laser, // current x - position of laser
+    output reg [6:0] y_laser, // current y - position of laser 
+    output reg [2:0] colour 
 );
   
   
@@ -15,7 +15,7 @@ module player_laser(
     // after it hits someone or the laser goes out of map boundary
 
     reg shot; // register player shoot at least once
-    wire [22:0] q;
+    wire [22:0] q; // output of rate divider
     ratedivider r0(clk, reset_n, q);
 
     always @(posedge clk)
@@ -34,9 +34,9 @@ module player_laser(
 
     always @(*)
     begin
-        if(shot && q == 1'b0)
+        if(shot == 1'b1 && q == 1'b0)
         begin 
-            if(y_laser == 1'b0 || hit == 1'b1) // if it reached end of map
+            if(y_laser == 1'b0 || hit == 1'b1) // if it reached end of map or hits an
             begin
                 x_laser <= x_pos;   //return back to player position
                 y_laser <= y_pos;   //
